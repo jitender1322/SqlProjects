@@ -1,0 +1,51 @@
+
+--- Ans=>1 ---
+
+create database  if not exists emp_db; 
+use emp_db;
+
+create table employee_data
+(
+emp_id int unsigned auto_increment primary key ,
+emp_name varchar(40) not null,
+join_date date,
+salary bigint unsigned,
+experience int unsigned 
+ );
+ 
+ insert into employee_data
+ (emp_name,join_date,salary,experience)
+ values("kamal","2022-09-15",18500,1);
+ 
+ 
+ select * from employee_data;
+ 
+ update employee_data set salary = 50000 where emp_id= 3;
+ 
+ delete from employee_data where emp_id = 10;
+
+
+ --- Ans=>3 ---
+
+use classicmodels;
+show tables;
+ 
+select * from products;
+ 
+select * from products where quantityInStock < 50;
+select * from products limit 12;
+
+select * from products order by quantityInStock desc;
+select * from products order by quantityInStock asc;
+
+select * from products where productLine = 'Motorcycles' and productVendor = 'Highway 66 Mini Classics';
+
+select * from products where productLine = 'Motorcycles' or productLine = 'Planes';
+
+select * from products where not productLine = 'Motorcycles' or productLine = 'Planes';
+
+select productLine,count(productLine) from products group by productLine;
+select productLine,count(productLine) from products group by productLine having count(productLine) >20;
+
+ 
+
