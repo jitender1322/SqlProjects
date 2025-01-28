@@ -1,0 +1,180 @@
+create database sqlExam;
+use sqlExam;
+
+create table employees(
+employeeId int primary key,
+firstname varchar(100),
+lastname varchar(100),
+departmentId int,
+hiredate date,
+foreign key (departmentId) references departments(departmentId)
+);
+
+create table departments(
+departmentId int primary key,
+departmentName varchar(100)
+);
+
+create table projects(
+projectId int primary key,
+projectName varchar(100),
+startDate date,
+endDate date
+);
+
+create table assignments(
+assignmentId int primary key,
+employeeId int,
+projectId int,
+role varchar(100),
+foreign key (employeeId) references employees(employeeId),
+foreign key (projectId) references projects(projectId)
+);
+
+insert into departments(departmentId,departmentName)
+values(1,"IT"),(2,"SALES"),(3,"HR"),(4,"Accounts");
+
+insert into employees(employeeId,firstname,lastname,departmentId,hiredate)
+values(1,"Sumit","Kumar",1,"2020-01-01"),(2,"Puneet","Sharma",2,"2022-02-15"),(3,"Vivek","Ameta",2,"2023-03-03"),(4,"Meet","Markana",3,"2010-01-01"),(5,"Rahul","Varma",4,"2013-07-01");
+
+insert into projects(projectId,projectName,startDate,endDate)
+values(1,"Project A","2021-01-01","2022-01-02"),(2,"Project B","2022-01-01","2023-01-02"),
+(3,"Project C","2011-01-01","2012-01-02");
+
+insert into assignments(assignmentId,employeeId,projectId,role)
+values(1,1,1,'Developer'),(2,2,2,'Accounted'),(3,3,3,'Manager'),(4,4,1,'Developer');
+
+
+-- 1
+
+select firstname, lastname, departmentName from employees e join departments d on  d.departmentId = e.departmentId where hiredate > "2020-01-01";
+
+-- 2
+
+select firstname, projectname from employees e 
+join assignments a on a.employeeId = e.employeeId
+join projects p on p.projectId = a.ProjectId
+where p.startDate < "2023-01-01" and p.endDate>"2023-12-31";
+
+-- 3
+
+select firstName, departmentName, role from employees e 
+join departments d on d.departmentId = e.departmentId
+join assignments a on a.employeeId = e.employeeId
+where role = "manager" and departmentName = "it";
+
+-- 4
+
+select firstname, projectname from employees e 
+join assignments a on a.employeeId = e.employeeId
+join projects p on p.projectId = a.ProjectId
+where projectName not like "%internal%";
+
+-- 5
+
+select firstname,lastname, departmentname from employees e
+join departments d on d.departmentId = e.departmentId
+where lastname like "s%";
+
+-- 6
+
+select firstname, projectname from employees e 
+join assignments a on a.employeeId = e.employeeId
+join projects p on p.projectId = a.ProjectId
+limit 10;
+
+-- 7
+
+ select firstname,lastname, departmentname,hiredate, rank() over( partition by departmentName order by hiredate ) from employees e
+join departments d on d.departmentId = e.departmentId;
+
+-- 8
+
+select firstname, projectname,datediff(enddate,startdate) from employees e 
+join assignments a on a.employeeId = e.employeeId
+join projects p on p.projectId = a.ProjectId;
+
+-- 9
+
+select concat(firstname," ",lastname ) as fullName, upper(departmentName) as departmentName from employees e
+join departments d on d.departmentId = e.departmentId;
+
+-- 10 
+
+select departmentName,count(*) from departments d
+join employees e on e.departmentId = d.departmentId
+group by departmentName;
+
+-- 11
+select departmentName,count(*),avg(datediff(curdate(),hiredate)/365) as averageTenur from departments d
+join employees e on e.departmentId = d.departmentId
+group by departmentName;
+
+-- 12
+
+
+
+-- 13
+
+select firstname, projectname from employees e 
+join assignments a on a.employeeId = e.employeeId
+join projects p on p.projectId = a.ProjectId
+where departmentId = (select departmentId from departments where departmentName = "sales");
+
+-- 14
+
+select firstName, departmentName,
+case when departmentName = "hr" then "Human Resources"
+else departmentName
+end as departmentName
+from employees e 
+join departments d on d.departmentId = e.departmentId;
+
+-- 15
+
+select firstname, projectname,departmentName from employees e 
+join assignments a on a.employeeId = e.employeeId
+join projects p on p.projectId = a.ProjectId
+join departments d on d.departmentId = e.departmentid;
+
+-- 16
+
+select firstname, projectname from employees e 
+cross join assignments a on a.employeeId = e.employeeId
+cross join projects p on p.projectId = a.ProjectId;
+
+-- 17
+
+select firstname,lastname, departmentname from employees e
+outer join departments d on d.departmentId = e.departmentId;
+
+-- 18
+
+select firstname,lastname, 
+case when departmentName = null then coalesce(null,"No department")
+else departmentName
+end as departmentname 
+from employees e
+left join departments d on d.departmentId = e.departmentId;
+
+-- 19
+
+select firstname, projectname from employees e 
+right join assignments a on a.employeeId = e.employeeId
+right join projects p on p.projectId = a.ProjectId;
+
+-- 20 
+
+select firstname, hiredate from employees where hiredate between "2020-01-01" and "2020-12-31";
+
+
+
+
+
+
+
+
+
+
+
+
